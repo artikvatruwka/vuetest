@@ -1,0 +1,18 @@
+{
+  "en": {
+    "langueName": "English",
+    "changeLangue": "Change language",
+    "changeCurrency": "Change currency",
+    "changeCrypto": "Change crypto",
+    "changeRequestFrequency": "Change request frequency",
+    "loading": "Loading..."
+  },
+  "ru": {
+    "langueName": "Русский",
+    "changeLangue": "Сменить язык",
+    "changeCurrency": "Сменить валюту",
+    "changeCrypto": "Сменить криптовалюту",
+    "changeRequestFrequency": "Сменить частоту запросов",
+    "loading": "Загрузка..."
+  }
+}
