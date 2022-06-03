@@ -27,13 +27,22 @@ export interface Subscription {
 export const initKrakenWSConnection = (store: Store<State>) => {
   const socket = new WebSocket("wss://ws.kraken.com");
 
-  const subscribeToTicker = () => {
+  const subscribeToTicker = (ticker: string) => {
     const req = {
       event: "subscribe",
-      pair: [`${store.state.crypto}/${store.state.fiat}`],
+      pair: [ticker],
       subscription: {
         name: "ticker",
+        // interval: 5,
       },
+    };
+    socket.send(JSON.stringify(req));
+  };
+
+  const unsubscribeFromTicker = (channelID: number) => {
+    const req = {
+      event: "unsubscribe",
+      channelID,
     };
     socket.send(JSON.stringify(req));
   };
@@ -44,16 +53,32 @@ export const initKrakenWSConnection = (store: Store<State>) => {
   };
 
   socket.onopen = () => {
-    subscribeToTicker();
+    subscribeToTicker(store.getters.getTicker);
   };
 
   socket.onmessage = (event) => {
     const data = JSON.parse(event.data);
     const eventType = data.event ?? data[2];
-
+    console.log(eventType, event.data);
     if (eventType === "subscriptionStatus")
       store.dispatch("addSubscription", data);
 
     if (eventType === "ticker") tickerEventHandler(event.data);
   };
+
+  socket.onerror = (error) => {
+    console.log(error);
+  };
+
+  let lastTicker = store.getters.getTicker;
+  store.subscribe((mutation, state) => {
+    if (
+      ["SET_CRYPTO", "SET_FIAT", "SET_UPDATE_FREQUENCY"].includes(mutation.type)
+    ) {
+      unsubscribeFromTicker(state.subscriptions[lastTicker].channelID);
+      store.dispatch("removeSubscription", lastTicker);
+      subscribeToTicker(store.getters.getTicker);
+    }
+    lastTicker = store.getters.getTicker;
+  });
 };

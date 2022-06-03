@@ -44,13 +44,13 @@ export default defineComponent({
       state: (state) => state,
     }),
     base(): string {
-      return this.fiatToCrypto ? "CRYPTO" : "FIAT";
+      return this.fiatToCrypto ? store.state.crypto : store.state.fiat;
     },
     target(): string {
-      return this.fiatToCrypto ? "FIAT" : "CRYPTO";
+      return this.fiatToCrypto ? store.state.fiat : store.state.crypto;
     },
     exchangedValue(): number | string {
-      if (!store.getters.getCurrentTickerLoaded) return "Loading...";
+      if (!store.getters.getCurrentTickerLoaded) return this.$t("loading");
       if (this.fiatToCrypto)
         return this.value * store.getters.getExchangeRateFiatToCrypto;
       return this.value * store.getters.getExchangeRateCryptoToFiat;

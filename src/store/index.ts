@@ -14,7 +14,6 @@ export default createStore<State>({
     rates: {},
     fiat: "EUR",
     crypto: "BTC",
-    selectedLanguage: "en",
     updateFrequency: 5000,
     subscriptions: {},
   },
@@ -80,5 +79,6 @@ export default createStore<State>({
       commit("SET_UPDATE_FREQUENCY", value);
     },
   },
+
   plugins: [initKrakenWSConnection],
 });
