@@ -1,4 +1,4 @@
-# vuetest
+# Cryptocurrency real time calculator 
 
 ## Project setup
 ```
